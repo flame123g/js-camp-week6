@@ -60,6 +60,7 @@ async function getProductsSafe() {
 	// 2. 檢查 response.ok 判斷是否成功
 	// 3. 成功回傳 { success: true, data: [...] }
 	// 4. 失敗回傳 { success: false, error: '錯誤訊息' }
+	//助教建議修改:getProductsSafe 失敗 catch 記得也要 return 唷（return { success: false, error: error.message };）
 	try{
 		const url=`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/products`;
 		const response=await fetch(url);
@@ -77,6 +78,7 @@ async function getProductsSafe() {
 		};
 	}catch(error){
 		console.log("錯誤:",error.message);
+		return { success: false, error: error.message };
 	};
 }
 
@@ -150,9 +152,9 @@ async function removeCartItem(cartId) {
 	// 請實作此函式
 	// 提示：發送 DELETE 請求到 /carts/{id}
 	const url=`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts/${cartId}`;
+	//助教建議修改:removeCartItem、clearCart 這兩個刪除購物車的 API 皆不需加上 headers 設定，這是發送資料到後端時才會用到的屬性唷
 	const response=await fetch(url,{
-		method:"DELETE",
-		headers: { 'Content-Type': 'application/json' }
+		method:"DELETE"
 	});
 	const data =await response.json();
 	return data;
@@ -166,9 +168,9 @@ async function clearCart() {
 	// 請實作此函式
 	// 提示：發送 DELETE 請求到 /carts
 	const url=`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`;
+	//助教建議修改:removeCartItem、clearCart 這兩個刪除購物車的 API 皆不需加上 headers 設定，這是發送資料到後端時才會用到的屬性唷
 	const response=await fetch(url,{
-		method:"DELETE",
-		headers: { 'Content-Type': 'application/json' }
+		method:"DELETE"
 	});
 	const data =await response.json();
 	return data;
@@ -186,8 +188,12 @@ async function clearCart() {
    1xx:資訊回應。例如:100表示請求已收到，繼續處理。
    2xx:成功回應。例如200表示請求已收到，並成功回應。
    3xx:重新導向訊息。例如304表示資源未修改，使用快取版本。
-   4xx:用戶端錯誤回應(前端請求錯誤)。例如400表示可能有語法上的錯誤，導致伺服器無法處理。
-   5xx:伺服器錯誤回應(後端請求錯誤)。例如500表示伺服器端發生未知或無法處理的錯誤。。
+   --4xx:用戶端錯誤回應(前端請求錯誤)。例如400表示可能有語法上的錯誤，導致伺服器無法處理。
+   --5xx:伺服器錯誤回應(後端請求錯誤)。例如500表示伺服器端發生未知或無法處理的錯誤。。
+//助教建議修改:
+// 4xx：客戶端的錯誤，也就是「請求本身有問題」，例如格式錯誤、權限不足、資源不存在等
+   5xx：伺服器端的錯誤，也就是「請求沒問題，但伺服器處理時出錯」。
+
 
 2. GET、POST、PATCH、PUT、DELETE 的差異
    答：
